@@ -1,5 +1,6 @@
 const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
+
 // Scoring
 let score = 0;
 
@@ -24,28 +25,39 @@ setInterval(() => {
   const randLeft = Math.random() * (containerWidth - 100);
 
   burglar.style.position = "absolute";
-  burglar.style.top = randTop + "px";
-  burglar.style.left = randLeft + "px";
-}, 1000);
+  burglar.style.top = `${randTop}px`;
+  burglar.style.left = `${randLeft}px`;
+
+
+}, 5000);
 
 // Bauble
-const bauble = document.createElement("img");
-bauble.setAttribute("class", "bauble");
-bauble.setAttribute("src", "./assets/bauble.png");
+const bauble = document.querySelector(".bauble");
+bauble.style.bottom = 0
 
 window.addEventListener("click", (e) => {
-  bauble.style.top = e.pageY + "px";
-  bauble.style.left = e.pageX + "px";
-
   if (e.target === burglar) {
     score++;
   }
+
+  console.log('Bauble', bauble.getBoundingClientRect())
+  console.log('Burglar', burglar.getBoundingClientRect())
   startButton.innerText = `SCORE: ${score}`;
 });
 
 // Clicking button starts game
 startButton.addEventListener("click", () => {
   container.appendChild(burglar);
-  container.appendChild(bauble);
   startButton.innerText = `SCORE: ${score}`;
 });
+
+container.addEventListener('click', mouseClicked)
+
+// Moving the bauble on click
+function mouseClicked (event){
+  const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
+  const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
+  bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
+  console.log(xposition, 'x')
+  console.log(yposition, 'y')
+}
