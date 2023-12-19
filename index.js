@@ -1,8 +1,12 @@
 const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
+const resetButton = document.querySelector('.reset-button')
 
 // Scoring
 let score = 0;
+
+// Tracking game state
+let gameStarted = false
 
 // Cursor
 const cursor = document.querySelector(".cursor");
@@ -35,29 +39,48 @@ setInterval(() => {
 const bauble = document.querySelector(".bauble");
 bauble.style.bottom = 0
 
-window.addEventListener("click", (e) => {
-  if (e.target === burglar) {
-    score++;
-  }
-
-  console.log('Bauble', bauble.getBoundingClientRect())
-  console.log('Burglar', burglar.getBoundingClientRect())
+// Clicking the burglar scores a point
+burglar.addEventListener('click', (event) => {
+  if (event.target === burglar) score++;
   startButton.innerText = `SCORE: ${score}`;
-});
+  if (resetButton.style.display === 'none') startButton.innerText = 'Start Game'
+})
 
 // Clicking button starts game
 startButton.addEventListener("click", () => {
+  if (!gameStarted) {
   container.appendChild(burglar);
   startButton.innerText = `SCORE: ${score}`;
+  resetButton.style.display = 'block'
+  bauble.style.display = 'block'
+  gameStarted = true
+}
 });
 
-container.addEventListener('click', mouseClicked)
+// Clicking the reset button
+resetButton.addEventListener('click', () => {
+  score = 0
+  startButton.innerText = 'Start Game'
+  resetButton.style.display = 'none'
+  container.removeChild(burglar)
+  bauble.style.display = 'none'
+  bauble.style.bottom = 0
+  gameStarted = false;
+})
+
 
 // Moving the bauble on click
 function mouseClicked (event){
+
+  if (gameStarted) {
   const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
   const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
   bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
-  console.log(xposition, 'x')
-  console.log(yposition, 'y')
+  }
 }
+
+window.addEventListener('mousemove', () => {
+  if (gameStarted && container.contains(burglar)) {
+    container.addEventListener('click', mouseClicked)
+  } 
+})
