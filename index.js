@@ -1,6 +1,8 @@
+// Variables
 const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
 const resetButton = document.querySelector('.reset-button')
+const cursor = document.querySelector(".cursor");
 
 // Scoring
 let score = 0;
@@ -8,8 +10,7 @@ let score = 0;
 // Tracking game state
 let gameStarted = false
 
-// Cursor
-const cursor = document.querySelector(".cursor");
+// Cursor movement
 window.addEventListener("mousemove", (e) => {
   cursor.style.top = e.pageY + "px";
   cursor.style.left = e.pageX + "px";
@@ -20,6 +21,11 @@ const burglar = document.createElement("img");
 burglar.setAttribute("class", "burglar");
 burglar.setAttribute("src", "./assets/burglar.png");
 
+// Bauble
+const bauble = document.querySelector(".bauble");
+bauble.style.bottom = 0
+
+// Positons and measurements
 const containerHeight = container.offsetHeight;
 const containerWidth = container.offsetWidth;
 
@@ -31,13 +37,8 @@ setInterval(() => {
   burglar.style.position = "absolute";
   burglar.style.top = `${randTop}px`;
   burglar.style.left = `${randLeft}px`;
+}, 1000);
 
-
-}, 5000);
-
-// Bauble
-const bauble = document.querySelector(".bauble");
-bauble.style.bottom = 0
 
 // Clicking the burglar scores a point
 burglar.addEventListener('click', (event) => {
@@ -68,10 +69,8 @@ resetButton.addEventListener('click', () => {
   gameStarted = false;
 })
 
-
 // Moving the bauble on click
 function mouseClicked (event){
-
   if (gameStarted) {
   const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
   const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
