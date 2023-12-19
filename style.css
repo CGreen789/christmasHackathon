@@ -7,7 +7,7 @@
 }
 
 body {
-  background-image: url("./assets/dx9q_atq9_211228.jpg");
+  background-image: url("./assets/2210_w015_n003_1011b_p15_1011.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
@@ -35,8 +35,9 @@ body {
 }
 
 button {
-  color: black;
-  border: 2px solid black;
+  color:#F4FFF8 ;
+  border: 2px solid #F4FFF8;
+  border-radius: 5px;
   background: transparent;
   padding: 15px 45px;
   font-size: 1.1rem;
@@ -44,6 +45,18 @@ button {
   outline: none;
   cursor: none;
   width: 200px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.score-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bauble {

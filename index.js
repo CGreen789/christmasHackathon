@@ -1,14 +1,38 @@
 // Variables
 const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
-const resetButton = document.querySelector('.reset-button')
 const cursor = document.querySelector(".cursor");
+const buttonContainer = document.querySelector('.button-container')
+const scoreBox = document.querySelector('.score-box');
+const scoreDisplay = document.querySelector('.score-display');
 
 // Scoring
 let score = 0;
 
 // Tracking game state
 let gameStarted = false
+let intervalId;
+
+// Difficulty levels
+const difficultyLevels = {
+  easy: {
+    intervalDuration: 1500, 
+    pointsToWin: 5,
+  },
+  medium: {
+    intervalDuration: 750,
+    pointsToWin: 10,
+  },
+  hard: {
+    intervalDuration: 400,
+    pointsToWin: 15,
+  },
+};
+
+const difficultyOrder = ['easy', 'medium', 'hard']
+// Difficulty on load
+let currentDifficulty = difficultyLevels['easy'];
+let currentDifficultyIndex = 0;
 
 // Cursor movement
 window.addEventListener("mousemove", (e) => {
@@ -30,44 +54,80 @@ const containerHeight = container.offsetHeight;
 const containerWidth = container.offsetWidth;
 
 // Randomize burglar position
-setInterval(() => {
+function setRandomPosition(){
+  clearInterval(intervalId)
+intervalId = setInterval(() => {
   const randTop = Math.random() * (containerHeight - 100);
   const randLeft = Math.random() * (containerWidth - 100);
 
   burglar.style.position = "absolute";
   burglar.style.top = `${randTop}px`;
   burglar.style.left = `${randLeft}px`;
-}, 1000);
-
-
-// Clicking the burglar scores a point
-burglar.addEventListener('click', (event) => {
-  if (event.target === burglar) score++;
-  startButton.innerText = `SCORE: ${score}`;
-  if (resetButton.style.display === 'none') startButton.innerText = 'Start Game'
-})
+}, currentDifficulty.intervalDuration);
+}
 
 // Clicking button starts game
 startButton.addEventListener("click", () => {
   if (!gameStarted) {
-  container.appendChild(burglar);
-  startButton.innerText = `SCORE: ${score}`;
-  resetButton.style.display = 'block'
-  bauble.style.display = 'block'
-  gameStarted = true
-}
+    container.appendChild(burglar);
+    clearInterval(intervalId)
+    setRandomPosition();
+    startButton.innerText = 'Reset Game';
+    bauble.style.display = 'block';
+    burglar.style.display = 'block';
+    scoreBox.style.display = 'flex';
+    gameStarted = true;
+    currentDifficulty = difficultyLevels['easy'];
+  } else {
+    resetGame()
+  }
 });
 
-// Clicking the reset button
-resetButton.addEventListener('click', () => {
-  score = 0
-  startButton.innerText = 'Start Game'
-  resetButton.style.display = 'none'
-  container.removeChild(burglar)
-  bauble.style.display = 'none'
-  bauble.style.bottom = 0
+// Clicking the burglar scores a point
+burglar.addEventListener('click', (event) => {
+  if (event.target === burglar) {
+    score++;
+    scoreDisplay.innerText = `SCORE: ${score}`;
+  }
+  if (score >= currentDifficulty.pointsToWin) {
+    alert(`Congratulations! You won the ${difficultyOrder[currentDifficultyIndex]} level!`);
+    
+    // If there's a next difficulty level, ask the user if they want to play it
+    if (currentDifficultyIndex < difficultyOrder.length - 1) {
+      const nextLevel = difficultyOrder[currentDifficultyIndex + 1];
+      const playNextLevel = confirm(`Do you want to play the next level ${nextLevel}?`);
+      
+      if (playNextLevel) {
+        setDifficulty(nextLevel);
+      } else {
+        resetGame();
+      }
+    } else {
+      alert('Well done! You reached the highest level!');
+      resetGame();
+    }
+  }
+});
+
+// Function to reset the game
+function resetGame() {
+  score = 0;
+  startButton.innerText = 'Start Game';
+  container.removeChild(burglar);
+  bauble.style.display = 'none';
+  bauble.style.bottom = 0;
+  scoreBox.style.display = 'none';
   gameStarted = false;
-})
+  currentDifficultyIndex = 0
+  currentDifficulty = difficultyLevels['easy'];
+}
+
+// Set difficulty level
+function setDifficulty(level) {
+  currentDifficultyIndex = difficultyOrder.indexOf(level);
+  currentDifficulty = difficultyLevels[level];
+  setRandomPosition();
+}
 
 // Moving the bauble on click
 function mouseClicked (event){
