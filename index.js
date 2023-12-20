@@ -3,8 +3,27 @@ const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
 const cursor = document.querySelector(".cursor");
 const buttonContainer = document.querySelector('.button-container')
-const scoreBox = document.querySelector('.score-box');
 const scoreDisplay = document.querySelector('.score-display');
+
+// Function to handle space bar press on Intro screen
+function handleKeyPress(event) {
+  if (event.code === "Space") {
+    showGame();
+  }
+}
+
+// Function to show the game screen and start the game
+function showGame() {
+  const introductionDiv = document.querySelector(".introduction");
+  const gameDiv = document.querySelector(".game");
+
+  // Hide introduction, show game
+  introductionDiv.style.display = "none";
+  gameDiv.style.display = "block";
+}
+
+// Event listener for space bar press
+document.addEventListener("keydown", handleKeyPress);
 
 // Scoring
 let score = 0;
@@ -57,8 +76,10 @@ const containerWidth = container.offsetWidth;
 function setRandomPosition(){
   clearInterval(intervalId)
 intervalId = setInterval(() => {
-  const randTop = Math.random() * (containerHeight - 100);
-  const randLeft = Math.random() * (containerWidth - 100);
+  const containerRect = container.getBoundingClientRect()
+
+  const randTop = Math.random() * (containerRect.height - 100);
+  const randLeft = Math.random() * (containerRect.width - 100);
 
   burglar.style.position = "absolute";
   burglar.style.top = `${randTop}px`;
@@ -75,7 +96,7 @@ startButton.addEventListener("click", () => {
     startButton.innerText = 'Reset Game';
     bauble.style.display = 'block';
     burglar.style.display = 'block';
-    scoreBox.style.display = 'flex';
+    scoreDisplay.style.display = 'flex';
     gameStarted = true;
     currentDifficulty = difficultyLevels['easy'];
   } else {
@@ -87,7 +108,7 @@ startButton.addEventListener("click", () => {
 burglar.addEventListener('click', (event) => {
   if (event.target === burglar) {
     score++;
-    scoreDisplay.innerText = `SCORE: ${score}`;
+    scoreDisplay.innerText = `Score: ${score}`;
   }
   if (score >= currentDifficulty.pointsToWin) {
     alert(`Congratulations! You won the ${difficultyOrder[currentDifficultyIndex]} level!`);
@@ -116,7 +137,7 @@ function resetGame() {
   container.removeChild(burglar);
   bauble.style.display = 'none';
   bauble.style.bottom = 0;
-  scoreBox.style.display = 'none';
+  scoreDisplay.style.display = 'none'; 
   gameStarted = false;
   currentDifficultyIndex = 0
   currentDifficulty = difficultyLevels['easy'];
