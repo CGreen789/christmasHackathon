@@ -2,7 +2,8 @@
 const container = document.querySelector(".container");
 const startButton = document.querySelector(".start-button");
 const cursor = document.querySelector(".cursor");
-const buttonContainer = document.querySelector('.button-container')
+const buttonContainer = document.querySelector('.button-container');
+const scoreBox = document.querySelector('.score-box');
 const scoreDisplay = document.querySelector('.score-display');
 const timerDisplay = document.getElementById('timer');
 
@@ -30,7 +31,7 @@ document.addEventListener("keydown", handleKeyPress);
 let score = 0;
 
 // Tracking game state
-let gameStarted = false
+let gameStarted = false;
 let intervalId;
 
 // Timer
@@ -50,12 +51,13 @@ burglar.setAttribute("class", "burglar");
 burglar.setAttribute("src", "./assets/burglar.png");
 
 // Bauble
-const bauble = document.querySelector(".bauble");
-bauble.style.bottom = 0
+let baubleCounter = 0;
 
 // Positons and measurements
 const containerHeight = container.offsetHeight;
 const containerWidth = container.offsetWidth;
+const windowHeight = window.innerHeight;
+const windowWidth = window.innerWidth;
 
 // Burglar intervals
 function setBurglarInterval() {
@@ -96,16 +98,15 @@ function updateTimer() {
 startButton.addEventListener("click", () => {
   if (!gameStarted) {
     container.appendChild(burglar);
-    clearInterval(intervalId)
+    clearInterval(intervalId);
     setRandomPosition();
     startButton.innerText = 'Reset Game';
-    bauble.style.display = 'block';
     burglar.style.display = 'block';
     scoreDisplay.style.display = 'flex';
     gameStarted = true;
     timerInterval = setInterval(updateTimer, 1000);
   } else {
-    resetGame()
+    resetGame();
   }
 });
 
@@ -135,16 +136,34 @@ function resetGame() {
 }
 
 // Moving the bauble on click
-function mouseClicked (event){
+function mouseClicked (event) {
   if (gameStarted) {
-  const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
-  const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
-  bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
+    const previousBauble = document.getElementById("bauble" + baubleCounter);
+    if (previousBauble) {
+      previousBauble.remove();
+    }
+
+    let baubleEl = document.createElement("img");
+    baubleEl.src = "./assets/bauble.png";
+    baubleEl.alt = "red bauble";
+    baubleEl.id = "bauble" + baubleCounter;
+    baubleEl.classList.add("bauble");
+    baubleEl.style.display = 'block';
+    baubleEl.style.top = windowHeight;
+    baubleEl.style.right = windowWidth/2;
+    document.getElementById("bauble-launcher").appendChild(baubleEl);
+    const xposition = (event.clientX - windowWidth/2 - baubleEl.offsetWidth/2);
+    const yposition = (event.clientY - windowHeight - baubleEl.offsetHeight/2);
+    baubleEl.style.transform = `translate(${xposition}px, ${yposition}px) rotate(3turn)`;
+    setTimeout(() => {
+      document.getElementById("bauble" + baubleCounter).remove();
+      baubleCounter += 1;
+    }, 100);
   }
 }
 
 window.addEventListener('mousemove', () => {
   if (gameStarted && container.contains(burglar)) {
-    container.addEventListener('click', mouseClicked)
+    container.addEventListener('click', mouseClicked);
   } 
 })
