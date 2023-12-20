@@ -65,7 +65,7 @@ button {
   z-index: 2;
   transform: translate(-50%, -50%);
   transform-origin: 25px 25px;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 .burglar {
@@ -75,5 +75,10 @@ button {
 
 img::selection {
   background: transparent;
+}
+
+#bauble-launcher {
+  position: absolute;
+  bottom: 0;
 }
 
