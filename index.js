@@ -7,9 +7,10 @@ const buttonContainer = document.querySelector(".button-container");
 const scoreBoard = document.querySelector(".scoreboard");
 const timerDisplay = document.getElementById("timer");
 const scoreCard = document.querySelector(".scoreboard-score");
-const star1 = document.querySelector('.star1')
-const star2 = document.querySelector('.star2')
-const star3 = document.querySelector('.star3')
+const star1 = document.querySelector(".star1");
+const star2 = document.querySelector(".star2");
+const star3 = document.querySelector(".star3");
+const overlay = document.querySelector(".overlay");
 
 // Function to handle space bar press on Intro screen
 function handleKeyPress(event) {
@@ -81,6 +82,7 @@ function startGame() {
   gameStarted = true;
   container.appendChild(burglar);
   burglar.style.animationName = "bounceIn";
+  scoreCard.innerText = `${score}`;
   clearInterval(intervalId);
   setRandomPosition();
   startButton.innerText = "Reset Game";
@@ -112,9 +114,9 @@ function resetGame() {
   burglarSpeed = 1500;
   bauble.style.display = "none";
   bauble.style.bottom = 0;
-  star1.classList.remove('bounce-in');
-  star2.classList.remove('bounce-in');
-  star3.classList.remove('bounce-in');
+  star1.classList.remove("bounce-in");
+  star2.classList.remove("bounce-in");
+  star3.classList.remove("bounce-in");
 }
 
 // Burglar intervals
@@ -158,11 +160,11 @@ function updateTimer() {
 
   if (timer === 0) {
     clearInterval(timerInterval);
-    const overlay = document.querySelector(".overlay");
+
     overlay.style.background = "rgba(0, 0, 0, 0.8)";
     scoreBoard.style.transform = "translate(-90%, 28%)";
     scoreBoard.style.transition = "all 2s ease-in-out";
-    resetGame();
+    container.removeChild(burglar);
   }
 }
 
@@ -171,6 +173,10 @@ startButton.addEventListener("click", () => {
   if (!gameStarted) {
     startGame();
   } else {
+    // move scoreBoard back
+    scoreBoard.style.transform = "translate(30%, 1%)";
+    scoreBoard.style.transition = "all 2s ease-in-out";
+    overlay.style.background = "rgba(0, 0, 0, 0.0)";
     resetGame();
   }
 });
@@ -181,11 +187,11 @@ burglar.addEventListener("click", (event) => {
     score++;
     scoreCard.innerText = `${score}`;
 
-    if (score >= 5) star1.classList.add('bounce-in');
-    if (score >= 10) star2.classList.add('bounce-in');
-    if (score >= 20) star3.classList.add('bounce-in');
+    if (score >= 5) star1.classList.add("bounce-in");
+    if (score >= 10) star2.classList.add("bounce-in");
+    if (score >= 20) star3.classList.add("bounce-in");
 
-    burglarSpeed -= 60
+    burglarSpeed -= 60;
 
     if (burglar.dataset.isAlternative === "true") {
       altBurglarSound.play();
