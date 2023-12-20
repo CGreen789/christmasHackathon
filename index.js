@@ -50,14 +50,44 @@ const burglar = document.createElement("img");
 burglar.setAttribute("class", "burglar");
 burglar.setAttribute("src", "./assets/burglar.png");
 
+
 // Bauble
 let baubleCounter = 0;
+const bauble = document.querySelector(".bauble");
+bauble.style.bottom = 0
 
 // Positons and measurements
 const containerHeight = container.offsetHeight;
 const containerWidth = container.offsetWidth;
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
+
+// Start Game
+function startGame(){
+  gameStarted = true;
+  container.appendChild(burglar);
+  clearInterval(intervalId);
+  setRandomPosition();
+  startButton.innerText = 'Reset Game';
+  burglar.style.display = 'block';
+  scoreDisplay.style.display = 'flex';
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Reset the game
+function resetGame() {
+  clearInterval(timerInterval)
+  gameStarted = false;
+  timer = 30;
+  score = 0;
+  startButton.innerText = 'Start Game';
+  scoreDisplay.innerText = `Score: ${score}`;
+  container.removeChild(burglar);
+  timerDisplay.innerText = 30;
+  burglarSpeed = 1500;
+  bauble.style.display = 'none';
+  bauble.style.bottom = 0;
+}
 
 // Burglar intervals
 function setBurglarInterval() {
@@ -97,14 +127,7 @@ function updateTimer() {
 // Clicking button starts game
 startButton.addEventListener("click", () => {
   if (!gameStarted) {
-    container.appendChild(burglar);
-    clearInterval(intervalId);
-    setRandomPosition();
-    startButton.innerText = 'Reset Game';
-    burglar.style.display = 'block';
-    scoreDisplay.style.display = 'flex';
-    gameStarted = true;
-    timerInterval = setInterval(updateTimer, 1000);
+    startGame();
   } else {
     resetGame();
   }
@@ -121,49 +144,19 @@ burglar.addEventListener('click', (event) => {
   }
 });
 
-// Function to reset the game
-function resetGame() {
-  score = 0;
-  startButton.innerText = 'Start Game';
-  container.removeChild(burglar);
-  bauble.style.display = 'none';
-  bauble.style.bottom = 0;
-  scoreDisplay.style.display = 'none'; 
-  timerDisplay.innerText = 30;
-  gameStarted = false;
-  burglarSpeed = 1500;
-  clearInterval(timerInterval)
-}
-
 // Moving the bauble on click
 function mouseClicked (event) {
   if (gameStarted) {
-    const previousBauble = document.getElementById("bauble" + baubleCounter);
-    if (previousBauble) {
-      previousBauble.remove();
-    }
-
-    let baubleEl = document.createElement("img");
-    baubleEl.src = "./assets/bauble.png";
-    baubleEl.alt = "red bauble";
-    baubleEl.id = "bauble" + baubleCounter;
-    baubleEl.classList.add("bauble");
-    baubleEl.style.display = 'block';
-    baubleEl.style.top = windowHeight;
-    baubleEl.style.right = windowWidth/2;
-    document.getElementById("bauble-launcher").appendChild(baubleEl);
-    const xposition = (event.clientX - windowWidth/2 - baubleEl.offsetWidth/2);
-    const yposition = (event.clientY - windowHeight - baubleEl.offsetHeight/2);
-    baubleEl.style.transform = `translate(${xposition}px, ${yposition}px) rotate(3turn)`;
-    setTimeout(() => {
-      document.getElementById("bauble" + baubleCounter).remove();
-      baubleCounter += 1;
-    }, 100);
+      const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
+      const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
+      if (bauble.style.bottom === '') bauble.style.bottom = '0'
+      bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
   }
 }
 
+
 window.addEventListener('mousemove', () => {
-  if (gameStarted && container.contains(burglar)) {
+    if (gameStarted && container.contains(burglar)) {
     container.addEventListener('click', mouseClicked);
-  } 
+  }
 })

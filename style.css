@@ -5,6 +5,7 @@
   font-family: Arial, Helvetica, sans-serif;
   cursor: none;
   height: 100%;
+  overflow: hidden;
 }
 
 /* Introduction Screen Styling */
@@ -16,6 +17,7 @@
     background-size: cover;
     height: 100%;
 }
+
 .centered-image {
   position: absolute;
   top: 40%;
@@ -104,7 +106,6 @@
   }
 }
 
-
 /* Game Styling */
 .game {
   background-image: url("./assets/2210_w015_n003_1011b_p15_1011.jpg");
@@ -164,6 +165,7 @@
   color: #F4FFF8;
   font-size: 1.1rem;
 }
+
 .timer-display {
   display: flex;
   align-items: center;
@@ -186,10 +188,10 @@
 .bauble {
   position: absolute;
   height: 100px;
-  z-index: 2;
+  /* z-index: 2; */
   transform: translate(-50%, -50%);
   transform-origin: 25px 25px;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .burglar {
@@ -201,8 +203,16 @@ img::selection {
   background: transparent;
 }
 
-#bauble-launcher {
-  position: absolute;
+.bauble-launcher {
+  position: fixed;
   bottom: 0;
+  left: 50%;
+  display: flex;
+  transform: translateX(-50%);
+  align-items: flex-end;
+  height: 200px;
 }
 
+.present {
+  height: 200px;
+}
