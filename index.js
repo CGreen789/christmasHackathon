@@ -45,6 +45,11 @@ window.addEventListener("mousemove", (e) => {
   cursor.style.left = e.pageX + "px";
 });
 
+// Sounds
+const baubleSound = new Audio('./assets/woosh-bauble-throw (1).mp3')
+const baubleSound2 = new Audio('assets/woosh-bauble-throw-2.mp3')
+let randomSound
+
 // Burglar
 const burglar = document.createElement("img");
 burglar.setAttribute("class", "burglar");
@@ -141,6 +146,8 @@ burglar.addEventListener('click', (event) => {
     burglarSpeed -= 60
     moveBurglar();
     setBurglarInterval(); 
+    randomSound = Math.random() < 0.5 ? baubleSound : baubleSound2;
+    randomSound.play();
   }
 });
 
