@@ -6,6 +6,26 @@ const buttonContainer = document.querySelector('.button-container');
 const scoreBox = document.querySelector('.score-box');
 const scoreDisplay = document.querySelector('.score-display');
 
+// Function to handle space bar press on Intro screen
+function handleKeyPress(event) {
+  if (event.code === "Space") {
+    showGame();
+  }
+}
+
+// Function to show the game screen and start the game
+function showGame() {
+  const introductionDiv = document.querySelector(".introduction");
+  const gameDiv = document.querySelector(".game");
+
+  // Hide introduction, show game
+  introductionDiv.style.display = "none";
+  gameDiv.style.display = "block";
+}
+
+// Event listener for space bar press
+document.addEventListener("keydown", handleKeyPress);
+
 // Scoring
 let score = 0;
 
@@ -75,7 +95,7 @@ startButton.addEventListener("click", () => {
     setRandomPosition();
     startButton.innerText = 'Reset Game';
     burglar.style.display = 'block';
-    scoreBox.style.display = 'flex';
+    scoreDisplay.style.display = 'flex';
     gameStarted = true;
     currentDifficulty = difficultyLevels['easy'];
   } else {
@@ -87,7 +107,7 @@ startButton.addEventListener("click", () => {
 burglar.addEventListener('click', (event) => {
   if (event.target === burglar) {
     score++;
-    scoreDisplay.innerText = `SCORE: ${score}`;
+    scoreDisplay.innerText = `Score: ${score}`;
   }
   if (score >= currentDifficulty.pointsToWin) {
     alert(`Congratulations! You won the ${difficultyOrder[currentDifficultyIndex]} level!`);
