@@ -127,7 +127,7 @@
   height: 70px;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
   transition: 0.3s transform ease;
   transform-origin: 100% 100%;
 }
@@ -146,7 +146,7 @@
   height: 70px;
 }
 
-.button-and-score {
+.info-container {
   display: flex;
   gap: 15px;
   margin-bottom: 1rem;
@@ -163,6 +163,24 @@
   border-radius: 5px;
   color: #F4FFF8;
   font-size: 1.1rem;
+}
+.timer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #F4FFF8;
+  height: 70px;
+  width: 200px;
+  margin-top: 2.2rem;
+  border-radius: 5px;
+  color: #F4FFF8;
+  font-size: 1.1rem;
+}
+
+#timer {
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .bauble {
