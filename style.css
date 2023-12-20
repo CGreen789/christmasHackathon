@@ -296,6 +296,12 @@ img::selection {
   }
 }
 
+.star.bounce-in {
+  display: block;
+  visibility: visible; /* Make the div visible */
+  opacity: 1; /* Set full opacity */
+  animation: bounceIn 0.5s ease forwards;
+}
 .scoreboard {
   position: absolute;
   z-index: 3;
@@ -356,16 +362,19 @@ img::selection {
 }
 
 .star1 {
+  display: none;
   top: 4px;
   left: 9px;
 }
 
 .star2 {
+  display: none;
   left: 67px;
   top: 4px;
 }
 
 .star3 {
+  display: none;
   top: 4px;
   left: 125px;
 }

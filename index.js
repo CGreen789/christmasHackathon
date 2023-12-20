@@ -7,6 +7,9 @@ const buttonContainer = document.querySelector(".button-container");
 const scoreBoard = document.querySelector(".scoreboard");
 const timerDisplay = document.getElementById("timer");
 const scoreCard = document.querySelector(".scoreboard-score");
+const star1 = document.querySelector('.star1')
+const star2 = document.querySelector('.star2')
+const star3 = document.querySelector('.star3')
 
 // Function to handle space bar press on Intro screen
 function handleKeyPress(event) {
@@ -109,6 +112,9 @@ function resetGame() {
   burglarSpeed = 1500;
   bauble.style.display = "none";
   bauble.style.bottom = 0;
+  star1.classList.remove('bounce-in');
+  star2.classList.remove('bounce-in');
+  star3.classList.remove('bounce-in');
 }
 
 // Burglar intervals
@@ -174,7 +180,13 @@ burglar.addEventListener("click", (event) => {
   if (event.target === burglar) {
     score++;
     scoreCard.innerText = `${score}`;
-    burglarSpeed -= 60;
+
+    if (score >= 5) star1.classList.add('bounce-in');
+    if (score >= 10) star2.classList.add('bounce-in');
+    if (score >= 20) star3.classList.add('bounce-in');
+
+    burglarSpeed -= 60
+
     if (burglar.dataset.isAlternative === "true") {
       altBurglarSound.play();
     } else {
