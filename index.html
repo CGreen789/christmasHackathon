@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="style.css" />
     <title>Deefending Deeside</title>
   </head>
@@ -32,14 +35,19 @@
 
 <div class='game' style="display: none;"> 
   <div class="container">
-    <div class="info-container ">
-      <div class="timer-display">Time:&nbsp;<span id="timer"> 30 </span>&nbsp;seconds</div>  
-      <button class="start-button" type="button">Start Game</button>
-      <div class="score-display" style="display: none;"> Score: 0</div>
+    <div class="scoreboard">
+      <div class="scoreboard-stars">
+        <div class="star star1"></div>
+        <div class="star star2"></div>
+        <div class="star star3"></div>
+      </div>
+      <img class="start-button" src="./assets/butotn-startgame.png" />
+      <p class="scoreboard-score"></p>
+      <p class="timer-display">Time:&nbsp;<span id="timer"> 30</span>s</p>
     </div>
     <img src="./assets/bauble.png" alt="red bauble" class="bauble" id="bauble0">
     <div class="bauble-launcher">
-      <img src="./assets/present.png" alt="present" class="present">
+      <img src="./assets/cannon.png" alt="present" class="present">
     </div>
       <img src="./assets/redCrosshair.gif" alt="crosshair" class="cursor" />
   </div> 

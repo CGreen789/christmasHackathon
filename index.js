@@ -4,9 +4,8 @@ const startButton = document.querySelector(".start-button");
 const cursor = document.querySelector(".cursor");
 const buttonContainer = document.querySelector('.button-container');
 const scoreBox = document.querySelector('.score-box');
-const scoreDisplay = document.querySelector('.score-display');
 const timerDisplay = document.getElementById('timer');
-
+const scoreCard = document.querySelector('.scoreboard-score')
 // Function to handle space bar press on Intro screen
 function handleKeyPress(event) {
   if (event.code === "Space") {
@@ -46,8 +45,14 @@ window.addEventListener("mousemove", (e) => {
 });
 
 // Sounds
-const baubleSound = new Audio('./assets/woosh-bauble-throw (1).mp3')
-const baubleSound2 = new Audio('assets/woosh-bauble-throw-2.mp3')
+const baubleSound       = new Audio('./assets/woosh-bauble-throw (1).mp3')
+const baubleSound2      = new Audio('assets/woosh-bauble-throw-2.mp3')
+const gameStartSound    = new Audio('./assets/gamestart.mp3')
+const altBurglarSound    = new Audio('./assets/keith_lemon_potato.mp3');
+const ouchSound1        = new Audio('./assets/ouch1.mp3')
+const ouchSound2        = new Audio('./assets/ouch2.mp3')
+const missedSound       = new Audio('./assets/missed1.mp3')
+const missedSound2      = new Audio('./assets/missed2.mp3')
 let randomSound
 
 // Burglar
@@ -55,11 +60,10 @@ const burglar = document.createElement("img");
 burglar.setAttribute("class", "burglar");
 burglar.setAttribute("src", "./assets/burglar.png");
 
-
 // Bauble
 let baubleCounter = 0;
 const bauble = document.querySelector(".bauble");
-bauble.style.bottom = 0
+bauble.style.display = 'none'
 
 // Positons and measurements
 const containerHeight = container.offsetHeight;
@@ -71,13 +75,25 @@ const windowWidth = window.innerWidth;
 function startGame(){
   gameStarted = true;
   container.appendChild(burglar);
+  burglar.style.animationName = 'bounceIn';
   clearInterval(intervalId);
   setRandomPosition();
   startButton.innerText = 'Reset Game';
   burglar.style.display = 'block';
-  scoreDisplay.style.display = 'flex';
+  gameStartSound.play()
   timerInterval = setInterval(updateTimer, 1000);
+
 }
+
+// move the bauble cannon with the mouse
+const present = document.querySelector('.present'); 
+window.addEventListener('mousemove', (event) => {
+  const presentRect = present.getBoundingClientRect();
+  const presentCenterX = presentRect.left + presentRect.width / 2;
+  const distanceFromCenter = event.clientX - presentCenterX;
+  const rotationAngle = distanceFromCenter / 10; 
+  present.style.transform = `rotate(${rotationAngle}deg)`;
+});
 
 // Reset the game
 function resetGame() {
@@ -86,7 +102,7 @@ function resetGame() {
   timer = 30;
   score = 0;
   startButton.innerText = 'Start Game';
-  scoreDisplay.innerText = `Score: ${score}`;
+  scoreCard.innerText = `${score}`;
   container.removeChild(burglar);
   timerDisplay.innerText = 30;
   burglarSpeed = 1500;
@@ -100,10 +116,20 @@ function setBurglarInterval() {
   intervalId = setInterval(moveBurglar, burglarSpeed);
 }
 
+function setBurglarAppearance() {
+  if (Math.random() < 0.2) { // 
+    burglar.setAttribute("src", "./assets/burglar-paddy.png");
+    burglar.dataset.isAlternative = "true";
+  } else {
+    burglar.setAttribute("src", "./assets/burglar.png");
+    burglar.dataset.isAlternative = "false";
+  }
+}
+
 // Move the burglar to random positions on the screen
 function moveBurglar() {
-  const containerRect = container.getBoundingClientRect();
-
+  setBurglarAppearance();
+  const containerRect = container.getBoundingClientRect()
   const randTop = Math.random() * (containerRect.height - 100);
   const randLeft = Math.random() * (containerRect.width - 100);
 
@@ -142,25 +168,48 @@ startButton.addEventListener("click", () => {
 burglar.addEventListener('click', (event) => {
   if (event.target === burglar) {
     score++;
-    scoreDisplay.innerText = `Score: ${score}`;
+    scoreCard.innerText = `${score}`;
     burglarSpeed -= 60
+    if (burglar.dataset.isAlternative === "true") {
+      altBurglarSound.play();
+    } else {
+      hitSound = Math.random() < 0.5 ? ouchSound1 : ouchSound2;
+      hitSound.play();
+    }
     moveBurglar();
     setBurglarInterval(); 
-    randomSound = Math.random() < 0.5 ? baubleSound : baubleSound2;
-    randomSound.play();
   }
 });
 
+// reset bauble 
+function resetBaublePosition() {
+  bauble.style.display = 'block';
+  bauble.style.bottom = '0';
+  bauble.style.left = '50%';
+  bauble.style.transform = 'translateX(-50%)';
+}
+
 // Moving the bauble on click
-function mouseClicked (event) {
+function mouseClicked(event) {
   if (gameStarted) {
-      const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth/2);
-      const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight/2);
-      if (bauble.style.bottom === '') bauble.style.bottom = '0'
-      bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
+    resetBaublePosition();
+    bauble.style.display = 'block'
+    const xposition = (event.clientX - bauble.offsetLeft - bauble.offsetWidth / 2);
+    const yposition = (event.clientY - bauble.offsetTop - bauble.offsetHeight / 2);
+    randomSound = Math.random() < 0.5 ? baubleSound : baubleSound2;
+    randomSound.play();
+    if (bauble.style.bottom === '') bauble.style.bottom = '0';
+    
+    // Add CSS transition for smooth movement
+    bauble.style.transition = 'transform 0.4s ease-out'; 
+    bauble.style.transform = `translate(${xposition}px, ${yposition}px)`;
   }
 }
 
+// hide bauble at the end of its throw
+bauble.addEventListener('transitionend', () => {
+  bauble.style.display = 'none'; 
+});
 
 window.addEventListener('mousemove', () => {
     if (gameStarted && container.contains(burglar)) {

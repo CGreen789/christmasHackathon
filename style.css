@@ -151,6 +151,7 @@
   display: flex;
   gap: 15px;
   margin-bottom: 1rem;
+
 }
 
 .score-display {
@@ -204,14 +205,103 @@ img::selection {
 
 .bauble-launcher {
   position: fixed;
-  bottom: 0;
+  bottom: -150px;
   left: 50%;
   display: flex;
   transform: translateX(-50%);
   align-items: flex-end;
-  height: 200px;
+  height: 300px;
+  width: 300px;
 }
 
 .present {
-  height: 200px;
+  position: relative;
+  height: 300px;
+  padding: 20px 30px;
+  left: 50px;
+}
+ 
+@keyframes bounceIn {
+  0% { transform: scale(0.2) translateY(50px); opacity: 0; }
+  50% { transform: scale(1.1) translateY(0); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes bounceOut {
+  0% { transform: scale(1) translateY(0); opacity: 1; }
+  50% { transform: scale(1.1) translateY(0); opacity: 1; }
+  100% { transform: scale(0.2) translateY(50px); opacity: 0; }
+}
+
+.scoreboard {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  background: url('assets/scoreboard.png') no-repeat;
+  background-size: 60%;
+}
+
+.scoreboard .start-button {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 110px;
+  left: 150px;
+  border: 0;
+  padding: 0;
+}
+
+.scoreboard-score {
+  position: absolute;
+  top: 102px;
+  left: 110px;
+  font-size: 20px;
+}
+
+.scoreboard-score,
+.timer-display,
+.timer-display span {
+  font-family: 'Lilita One', sans-serif;
+  font-weight: bold;
+  color: #fff;
+}
+
+.timer-display {
+  position: absolute;
+  top: 103px;
+  left: 20px;
+  border: 0;
+  width: 110px;
+}
+
+.scoreboard-stars {
+  position: absolute;
+  width: 180px;
+  height: 55px;
+  top: 35px;
+  left: 30px;
+}
+
+.star {
+  position: absolute;
+  background: url('./assets/star.png') no-repeat;
+  background-size: 100%;
+  width: 45px;
+  height: 55px;
+}
+
+.star1 {
+  top: 4px;
+  left: 9px;
+}
+
+.star2 {
+  left: 67px;
+  top: 4px;
+}
+
+.star3 {
+  top: 4px;
+  left: 125px;
 }
