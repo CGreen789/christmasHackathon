@@ -4,6 +4,7 @@ const startButton = document.querySelector(".start-button");
 const cursor = document.querySelector(".cursor");
 const buttonContainer = document.querySelector('.button-container')
 const scoreDisplay = document.querySelector('.score-display');
+const timerDisplay = document.getElementById('timer');
 
 // Function to handle space bar press on Intro screen
 function handleKeyPress(event) {
@@ -32,26 +33,10 @@ let score = 0;
 let gameStarted = false
 let intervalId;
 
-// Difficulty levels
-const difficultyLevels = {
-  easy: {
-    intervalDuration: 1500, 
-    pointsToWin: 5,
-  },
-  medium: {
-    intervalDuration: 750,
-    pointsToWin: 10,
-  },
-  hard: {
-    intervalDuration: 400,
-    pointsToWin: 15,
-  },
-};
-
-const difficultyOrder = ['easy', 'medium', 'hard']
-// Difficulty on load
-let currentDifficulty = difficultyLevels['easy'];
-let currentDifficultyIndex = 0;
+// Timer
+let timer = 30;
+let timerInterval;
+let burglarSpeed = 1500;
 
 // Cursor movement
 window.addEventListener("mousemove", (e) => {
@@ -72,11 +57,15 @@ bauble.style.bottom = 0
 const containerHeight = container.offsetHeight;
 const containerWidth = container.offsetWidth;
 
-// Randomize burglar position
-function setRandomPosition(){
-  clearInterval(intervalId)
-intervalId = setInterval(() => {
-  const containerRect = container.getBoundingClientRect()
+// Burglar intervals
+function setBurglarInterval() {
+  clearInterval(intervalId);
+  intervalId = setInterval(moveBurglar, burglarSpeed);
+}
+
+// Move the burglar to random positions on the screen
+function moveBurglar() {
+  const containerRect = container.getBoundingClientRect();
 
   const randTop = Math.random() * (containerRect.height - 100);
   const randLeft = Math.random() * (containerRect.width - 100);
@@ -84,7 +73,23 @@ intervalId = setInterval(() => {
   burglar.style.position = "absolute";
   burglar.style.top = `${randTop}px`;
   burglar.style.left = `${randLeft}px`;
-}, currentDifficulty.intervalDuration);
+}
+
+// Randomize burglar position
+function setRandomPosition() {
+  setBurglarInterval();
+}
+
+// Updating timer
+function updateTimer() {
+  timer--;
+  timerDisplay.innerText = timer;
+
+  if (timer === 0) {
+    clearInterval(timerInterval)
+    alert(`Time's up! Your final score is ${score}`)
+    resetGame();
+  }
 }
 
 // Clicking button starts game
@@ -98,7 +103,7 @@ startButton.addEventListener("click", () => {
     burglar.style.display = 'block';
     scoreDisplay.style.display = 'flex';
     gameStarted = true;
-    currentDifficulty = difficultyLevels['easy'];
+    timerInterval = setInterval(updateTimer, 1000);
   } else {
     resetGame()
   }
@@ -109,24 +114,9 @@ burglar.addEventListener('click', (event) => {
   if (event.target === burglar) {
     score++;
     scoreDisplay.innerText = `Score: ${score}`;
-  }
-  if (score >= currentDifficulty.pointsToWin) {
-    alert(`Congratulations! You won the ${difficultyOrder[currentDifficultyIndex]} level!`);
-    
-    // If there's a next difficulty level, ask the user if they want to play it
-    if (currentDifficultyIndex < difficultyOrder.length - 1) {
-      const nextLevel = difficultyOrder[currentDifficultyIndex + 1];
-      const playNextLevel = confirm(`Do you want to play the next level ${nextLevel}?`);
-      
-      if (playNextLevel) {
-        setDifficulty(nextLevel);
-      } else {
-        resetGame();
-      }
-    } else {
-      alert('Well done! You reached the highest level!');
-      resetGame();
-    }
+    burglarSpeed -= 60
+    moveBurglar();
+    setBurglarInterval(); 
   }
 });
 
@@ -138,16 +128,10 @@ function resetGame() {
   bauble.style.display = 'none';
   bauble.style.bottom = 0;
   scoreDisplay.style.display = 'none'; 
+  timerDisplay.innerText = 30;
   gameStarted = false;
-  currentDifficultyIndex = 0
-  currentDifficulty = difficultyLevels['easy'];
-}
-
-// Set difficulty level
-function setDifficulty(level) {
-  currentDifficultyIndex = difficultyOrder.indexOf(level);
-  currentDifficulty = difficultyLevels[level];
-  setRandomPosition();
+  burglarSpeed = 1500;
+  clearInterval(timerInterval)
 }
 
 // Moving the bauble on click
