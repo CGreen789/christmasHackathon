@@ -82,7 +82,7 @@ function startGame() {
   gameStarted = true;
   container.appendChild(burglar);
   burglar.style.animationName = "bounceIn";
-  scoreCard.innerText = `${score}`;
+  scoreCard.textContent = `${score}`;
   clearInterval(intervalId);
   setRandomPosition();
   startButton.innerText = "Reset Game";
@@ -108,7 +108,7 @@ function resetGame() {
   timer = 30;
   score = 0;
   startButton.innerText = "Start Game";
-  scoreCard.innerText = `${score}`;
+  scoreCard.textContent = `${score}`;
   container.removeChild(burglar);
   timerDisplay.innerText = 30;
   burglarSpeed = 1500;
@@ -184,8 +184,13 @@ startButton.addEventListener("click", () => {
 // Clicking the burglar scores a point
 burglar.addEventListener("click", (event) => {
   if (event.target === burglar) {
-    score++;
-    scoreCard.innerText = `${score}`;
+    if (burglar.dataset.isAlternative === "true") {
+      score--;
+      scoreCard.textContent = `${score}`;
+    } else {
+      score++;
+      scoreCard.textContent = `${score}`;
+    }
 
     if (score >= 5) star1.classList.add("bounce-in");
     if (score >= 10) star2.classList.add("bounce-in");
