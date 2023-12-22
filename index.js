@@ -11,6 +11,14 @@ const star1 = document.querySelector(".star1");
 const star2 = document.querySelector(".star2");
 const star3 = document.querySelector(".star3");
 const overlay = document.querySelector(".overlay");
+const menuMusic = new Audio("./assets/splash.mp3");
+
+window.addEventListener("mousemove", () => {
+  if (!gameStarted) {
+    menuSound = menuMusic
+    menuSound.play();
+  }
+});
 
 // Function to handle space bar press on Intro screen
 function handleKeyPress(event) {
